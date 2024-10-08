@@ -6,6 +6,7 @@ from rs.ai.peaceful_pummeling.peaceful_pummeling import PEACEFUL_PUMMELING
 from rs.ai.pwnder_my_orbs.pwnder_my_orbs import PWNDER_MY_ORBS
 from rs.ai.requested_strike.requested_strike import REQUESTED_STRIKE
 from rs.ai.shivs_and_giggles.shivs_and_giggles import SHIVS_AND_GIGGLES
+from rs.ai.stance_dance.stance_dance import STANCE_DANCE
 from rs.helper.seed import make_random_seed
 from rs.api.client import Client
 from rs.machine.game import Game
@@ -16,11 +17,12 @@ run_seeds = [
     #'LGZ12EEMFGUK',
 ]
 run_amount = 1
-strategy = PEACEFUL_PUMMELING
+strategy = STANCE_DANCE
 
 if __name__ == "__main__":
     init_log()
     log("Starting up")
+    log("Using STANCE DANCING")
     log_new_run_sequence()
     try:
         client = Client()

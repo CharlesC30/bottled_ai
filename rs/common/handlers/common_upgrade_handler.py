@@ -6,6 +6,7 @@ from rs.machine.handlers.handler import Handler
 from rs.machine.handlers.handler_action import HandlerAction
 from rs.machine.state import GameState
 
+from rs.helper.logger import log
 
 class CommonUpgradeHandler(Handler):
 
@@ -23,12 +24,15 @@ class CommonUpgradeHandler(Handler):
 
     def handle(self, state: GameState) -> HandlerAction:
         choice_list = state.game_state()["choice_list"]
+        for c in choice_list:
+            log(c)
 
         # we have to copy this, otherwise it will modify the list until the bot is rerun
         transformed_priorities = self.upgrade_priorities.copy()
         self.transform_priorities_based_on_game_state(transformed_priorities, state)
 
         for priority in transformed_priorities:
+            log(priority)
             if priority in choice_list:
                 if presentation_mode:
                     return HandlerAction(commands=[p_delay, "choose " + priority, p_delay_s])
