@@ -1,7 +1,7 @@
 from typing import List
 
 from presentation_config import presentation_mode, p_delay, p_delay_s, slow_events
-from rs.ai._example.config import CARD_REMOVAL_PRIORITY_LIST, DESIRED_CARDS_FOR_DECK
+from rs.ai.stance_dance.config import CARD_REMOVAL_PRIORITY_LIST, DESIRED_CARDS_FOR_DECK
 from rs.game.screen_type import ScreenType
 from rs.helper.logger import log_missing_event
 from rs.machine.command import Command
