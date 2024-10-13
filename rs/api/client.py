@@ -14,6 +14,7 @@ class Client:
             else:
                 log_to_run(log_message)
         input_response = input(message + "\n")
+        # log(input_response, filename="gamestate")
         if not silent:
             log_message = f"Response: {input_response}"
             if before_run:

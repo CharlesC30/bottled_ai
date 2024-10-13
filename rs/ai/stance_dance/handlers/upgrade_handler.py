@@ -6,13 +6,15 @@ from rs.machine.state import GameState
 
 class UpgradeHandler(CommonUpgradeHandler):
 
-    def __init__(self):
-        super().__init__(priorities=[
-            'eruption',
-            'rushdown',
-            'scrawl',
+    def __init__(self, high_priority_upgrades: List[str]):
+        # super().__init__(priorities=[
+        #     'eruption',
+        #     'rushdown',
+        #     'scrawl',
 
-        ])
+        # ])
+        super().__init__(priorities=[p.lower() for p in high_priority_upgrades])
+
 
     def transform_priorities_based_on_game_state(self, priorities: List[str], state: GameState):
         remove_if_snecko = [

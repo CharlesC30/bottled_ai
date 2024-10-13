@@ -36,6 +36,7 @@ DESIRED_CARDS_FROM_POTIONS: dict[str, int] = {
 HIGH_PRIORITY_UPGRADES = [
     'Eruption',
     'Rushdown',
+    'Scrawl',
 ]
 
 DESIRED_POTIONS = [

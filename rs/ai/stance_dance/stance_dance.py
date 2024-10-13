@@ -38,7 +38,7 @@ STANCE_DANCE: AiStrategy = AiStrategy(
         CommonAstrolabeHandler(CARD_REMOVAL_PRIORITY_LIST),
         CommonBattleHandler(),
         CommonBossRelicHandler(),
-        UpgradeHandler(),
+        UpgradeHandler(HIGH_PRIORITY_UPGRADES),
         CommonTransformHandler(CARD_REMOVAL_PRIORITY_LIST),
         CommonPurgeHandler(CARD_REMOVAL_PRIORITY_LIST),
         CommonCombatRewardHandler(desired_potions=DESIRED_POTIONS),
