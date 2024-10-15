@@ -2,6 +2,7 @@ from typing import List
 
 from rs.ai.stance_dance.config import CARD_REMOVAL_PRIORITY_LIST, DESIRED_CARDS_FOR_DECK, HIGH_PRIORITY_UPGRADES, \
     DESIRED_CARDS_FROM_POTIONS, DESIRED_POTIONS
+from rs.ai.stance_dance.handlers.battle_handler import BattleHandler
 from rs.ai.stance_dance.handlers.event_handler import EventHandler
 from rs.ai.stance_dance.handlers.potions_handler import PotionsBossHandler, PotionsEventFightHandler, PotionsEliteHandler
 from rs.ai.stance_dance.handlers.shop_purchase_handler import ShopPurchaseHandler
@@ -36,7 +37,8 @@ STANCE_DANCE: AiStrategy = AiStrategy(
     character=Character.WATCHER,
     handlers=[
         CommonAstrolabeHandler(CARD_REMOVAL_PRIORITY_LIST),
-        CommonBattleHandler(),
+        BattleHandler(),
+        # CommonBattleHandler(),
         CommonBossRelicHandler(),
         UpgradeHandler(HIGH_PRIORITY_UPGRADES),
         CommonTransformHandler(CARD_REMOVAL_PRIORITY_LIST),
