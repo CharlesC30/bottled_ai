@@ -2,13 +2,6 @@ from dataclasses import dataclass, field
 
 from rs.calculator.executor import get_best_battle_action
 from rs.calculator.interfaces.comparator_interface import ComparatorInterface
-from rs.common.comparators.big_fight_comparator import BigFightComparator
-from rs.common.comparators.common_general_comparator import CommonGeneralComparator
-from rs.common.comparators.gremlin_nob_comparator import GremlinNobComparator
-from rs.common.comparators.three_sentry_comparator import ThreeSentriesComparator
-from rs.common.comparators.three_sentry_turn_1_comparator import ThreeSentriesTurn1Comparator
-from rs.common.comparators.transient_comparator import TransientComparator
-from rs.common.comparators.waiting_lagavulin_comparator import WaitingLagavulinComparator
 from rs.game.card import CardType
 from rs.machine.command import Command
 from rs.machine.handlers.handler import Handler
