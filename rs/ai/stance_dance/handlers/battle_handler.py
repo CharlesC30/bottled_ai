@@ -24,7 +24,7 @@ from rs.helper.logger import log
 # return appropriate enablers based on state
 
 
-def find_next_infinite_move(state: GameState, stance: StanceType) -> Play:
+def find_next_infinite_move(state: GameState, stance: StanceType) -> Play | None:
     played_rushdown = "rushdown" in [power['name'].lower() for power in state.get_player_combat()["powers"]]
     all_cards_in_hand = (len(state.discard_pile.cards) == 0) and (len(state.draw_pile.cards) == 0)
     cards_in_hand = [card.name for card in state.hand.cards]
@@ -35,11 +35,11 @@ def find_next_infinite_move(state: GameState, stance: StanceType) -> Play:
                 enabler = "Inner Peace"
             elif "Inner Peace+" in cards_in_hand:
                 enabler = "Inner Peace+"
-            elif any([("ATTACK" in monster['intent']) for monster in state.get_monsters()]):
-                if "Fear No Evil" in cards_in_hand:
-                    enabler = "Fear No Evil"
-                elif "Fear No Evil+" in cards_in_hand:
-                    enabler = "Fear No Evil+"
+            # elif any([("ATTACK" in monster['intent']) for monster in state.get_monsters()]):
+            elif "Fear No Evil" in cards_in_hand:
+                enabler = "Fear No Evil"
+            elif "Fear No Evil+" in cards_in_hand:
+                enabler = "Fear No Evil+"
             elif state.has_relic("Violet Lotus") and state.get_player_combat()["energy"] > 2:
                 if "Vigilance" in cards_in_hand:
                     enabler = "Vigilance"
@@ -49,8 +49,10 @@ def find_next_infinite_move(state: GameState, stance: StanceType) -> Play:
             card_index = state.hand.get_card_index_from_name(enabler)
             if enabler == "Fear No Evil" or enabler == "Fear No Evil+":
                 # find the index of first attacking monster
-                monster_intents = [monster["intent"] for monster in state.get_monsters()]
-                target_index = next((i for i, intent in enumerate(monster_intents) if "ATTACK" in intent), None)
+                target_index = next((i for i, monster in enumerate(state.get_monsters()) if ("ATTACK" in monster["intent"] and not monster["is_gone"])), 
+                                    None)
+                if target_index is None:
+                    return None
                 return (card_index, target_index)
             return (card_index, -1)
         
@@ -86,7 +88,6 @@ class BattleHandler(Handler):
     def __init__(self, config: BattleHandlerConfig = BattleHandlerConfig(), max_path_count: int = 11_000):
         self.config: BattleHandlerConfig = config
         self.max_path_count: int = max_path_count
-        self.in_infinite = False
 
     def can_handle(self, state: GameState) -> bool:
         return state.has_command(Command.PLAY) \
@@ -157,25 +158,21 @@ class BattleHandler(Handler):
 
     def handle(self, state: GameState) -> HandlerAction:
         if self.has_infinite_in_deck(state):
-            if not self.in_infinite:
-                log("Starting Infinite")
-                self.in_infinite = True
             battle_state = create_battle_state(state)
             next_move = find_next_infinite_move(state, stance=battle_state.get_stance())
 
-            battle_state.transform_from_play(next_move, is_first_play=False)
-            memory_book = TheBotsMemoryBook(memory_by_card=battle_state.memory_by_card.copy(), memory_general=battle_state.memory_general.copy())
-            
-            if next_move[1] == -1:
-                return HandlerAction(commands=[f"play {next_move[0] + 1}"], memory_book=memory_book)
-            return HandlerAction(commands=[f"play {next_move[0] + 1} {next_move[1]}"], memory_book=memory_book)
+            if next_move:
+                battle_state.transform_from_play(next_move, is_first_play=False)
+                memory_book = TheBotsMemoryBook(memory_by_card=battle_state.memory_by_card.copy(), memory_general=battle_state.memory_general.copy())
+                if next_move[1] == -1:  
+                    return HandlerAction(commands=[f"play {next_move[0] + 1}"], memory_book=memory_book)
+                return HandlerAction(commands=[f"play {next_move[0] + 1} {next_move[1]}"], memory_book=memory_book)
 
         actions = get_best_battle_action(state, self.select_comparator(state), self.max_path_count)
         if actions:
             log("Not using infinite")
             return actions
         if state.has_command(Command.END):
-            self.in_infinite = False
             return HandlerAction(commands=["end"], memory_book=None)
         return HandlerAction(commands=[], memory_book=None)
 
